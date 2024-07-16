@@ -1,0 +1,29 @@
+function createChartAndSendEmail() {
+  // Mendapatkan spreadsheet dan sheet aktif
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  
+  // Menentukan rentang data untuk grafik
+  var dataRange = sheet.getRange('J3');  // Ubah rentang sesuai dengan data Anda
+
+  // Membuat grafik
+  var chart = sheet.newChart()
+      .setChartType(Charts.ChartType.LINE) // Jenis grafik, bisa diganti sesuai kebutuhan
+      .addRange(dataRange)
+      .setPosition(5, 5, 0, 0) // Posisi grafik di sheet
+      .setOption('Grafik Data', 'Contoh Grafik') // Judul grafik
+      .build();
+
+  // Menambahkan grafik ke sheet
+  sheet.insertChart(chart);
+
+  // Membuat laporan dalam format PDF
+  var blob = SpreadsheetApp.getActiveSpreadsheet().getAs('application/pdf').setName('Laporan-Grafik.pdf');
+  
+  // Mengirim email dengan lampiran PDF
+  var emailAddress = 'contoh@example.com'; // Ganti dengan alamat email penerima
+  var subject = 'Laporan Grafik Mingguan';
+  var body = 'Berikut adalah laporan grafik dalam format PDF untuk minggu ini.';
+  MailApp.sendEmail(emailAddress, subject, body, {
+    attachments: [blob]
+  });
+}
